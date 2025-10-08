@@ -11,7 +11,7 @@ namespace MohawkTerminalGame
         /// Run once before Execute begins
         public void Setup()
         {
-            Program.TerminalExecuteMode = TerminalExecuteMode.ExecuteLoop;
+           // Program.TerminalExecuteMode = TerminalExecuteMode.ExecuteLoop;
             Program.TerminalInputMode = TerminalInputMode.KeyboardReadAndReadLine;
 
             Terminal.SetTitle("the heart of deception ");
@@ -21,14 +21,10 @@ namespace MohawkTerminalGame
             Terminal.WordBreakCharacter = ' '; // break on spaces
         }
 
-        // Execute() runs based on Program.TerminalExecuteMode (assign to it in Setup).
-        //  ExecuteOnce: runs only once. Once Execute() is done, program closes.
-        //  ExecuteLoop: runs in infinite loop. Next iteration starts at the top of Execute().
-        //  ExecuteTime: runs at timed intervals (eg. "FPS"). Code tries to run at Program.TargetFPS.
-        //               Code must finish within the alloted time frame for this to work well.
+        
         public void Execute()
         {
-            Terminal.RoboTypeIntervalMilliseconds = 50;
+            Terminal.RoboTypeIntervalMilliseconds = 30;
             Terminal.Beep();
             Terminal.WriteLine("This is your final test to prove yourself worthy to Omarious, the lead councilman of Angrulia. Many have tried before, but those who ventured out never returned." +
                 " Your task is to track down Helsadona" +
@@ -43,28 +39,28 @@ namespace MohawkTerminalGame
 
             Terminal.Beep();
             Terminal.RoboTypeIntervalMilliseconds = 10;
-            // player option to choose a weapon  
-            Terminal.WriteLine("which weapon do you choose [septor], [sword], or a [spear]");
+            // player option for a weapon to proceed 
+            Terminal.WriteLine("which weapon do you choose [septor], [sword], [spear]");
             
             string answer = Terminal.ReadAndClearLine();
-            if (answer.ToLower().Equals("y"))
+            if (answer.ToLower().Equals("septor"))
             {
                 Terminal.RoboTypeIntervalMilliseconds = 50;
-                Terminal.WriteLine("Mankind thanks you, Elite McGeet.");
+                Terminal.WriteLine("ahh a septor what a mysterious choice");
             }
-            else if (answer.ToLower().Equals("n"))
+            else if (answer.ToLower().Equals("sword"))
             {
                 Terminal.RoboTypeIntervalMilliseconds = 100;
-                Terminal.WriteLine("Mission failed before it even began.");
+                Terminal.WriteLine("the sword a great to slice through your enemies");
             }
-            else
+            else 
             {
-                Terminal.RoboTypeIntervalMilliseconds = 150;
-                Terminal.WriteLine("MISCHIEVIOUS ARE WE?");
-            }
-            Terminal.WriteLine();
-            Terminal.WriteLine("Press CTRL+C to force quit any program.");
-            Terminal.WriteLine();
+              
+
+                   
+        
+    }
+            
         }
 
     }

@@ -2,6 +2,10 @@
 {
     public class TerminalGame
     {
+        public enum GameMode { Story, Adventure }
+
+        public GameMode activeGameMode = GameMode.Story;
+
         // Place your variables here
         TerminalGridWithColor map;
         ColoredText tree = new(@"/\", ConsoleColor.Green, ConsoleColor.DarkGreen);
@@ -43,8 +47,17 @@
         //               Code must finish within the alloted time frame for this to work well.
         public void Execute()
         {
+            if (activeGameMode == GameMode.Story)
+            {
+                //Tell the story
+            }
+            else if (activeGameMode == GameMode.Adventure)
+            {
+                //Play adventure
+            }
+
             // Move player
-            CheckMovePlayer();
+                CheckMovePlayer();
 
             // Naive approach, works but it's much but slower
             //map.Overwrite(0,0);

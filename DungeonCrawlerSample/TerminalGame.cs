@@ -8,10 +8,9 @@
 
         // Place your variables here
         TerminalGridWithColor map;
-        ColoredText tree = new(@"/\", ConsoleColor.Green, ConsoleColor.DarkGreen);
-        ColoredText riverNS = new(@"||", ConsoleColor.Blue, ConsoleColor.DarkBlue);
-        ColoredText riverEW = new(@"==", ConsoleColor.Blue, ConsoleColor.DarkBlue);
-        ColoredText player = new(@"😎", ConsoleColor.White, ConsoleColor.Black);
+
+        ColoredText background = new(@"░", ConsoleColor.White, ConsoleColor.Black);
+        ColoredText player = new(@"𐀪", ConsoleColor.White, ConsoleColor.Black);
         bool inputChanged;
         int oldPlayerX;
         int oldPlayerY;
@@ -30,9 +29,9 @@
             Terminal.CursorVisible = false; // hide cursor
 
             // Set map to some values
-            map = new(10, 10, tree);
-            map.SetCol(riverNS, 3);
-            map.SetRow(riverEW, 8);
+            map = new(39, 18, background);
+
+
 
             // Clear window and draw map
             map.ClearWrite();
@@ -57,7 +56,7 @@
             }
 
             // Move player
-                CheckMovePlayer();
+            CheckMovePlayer();
 
             // Naive approach, works but it's much but slower
             //map.Overwrite(0,0);
@@ -71,10 +70,7 @@
                 inputChanged = false;
             }
 
-            // Write time below game
-            Terminal.SetCursorPosition(0, 12);
-            Terminal.ResetColor();
-            Terminal.Write(Time.DisplayText);
+
         }
 
         void CheckMovePlayer()
@@ -116,5 +112,18 @@
             map.Poke(x * 2, oldPlayerY, mapTile);
         }
 
+        void DrawMap(string mapText, int mapX, int mapY)
+        {
+            for (int x = 0; x < mapX; x++)
+
+            {
+
+                for (int y = 0; y < mapY; y++)
+
+                {
+
+                }
+            }
+        }
     }
 }

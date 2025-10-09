@@ -8,7 +8,7 @@ namespace MohawkTerminalGame
     {
         public enum GameMode { Story, Adventure }
 
-        public GameMode activeGameMode = GameMode.Adventure;
+        public GameMode activeGameMode = GameMode.Story; // Start in Story mode
 
         // Map and player variables
         TerminalGridWithColor map;
@@ -26,19 +26,22 @@ namespace MohawkTerminalGame
         List<Slime> slimes = new();
         int frameCounter = 0;
 
+        // Flags
+        bool playerDied = false;           // Was Story mode triggered by death?
+        bool storyScreenDrawn = false;     // Prevent flicker in story mode
+
         /// Simple slime class
         class Slime
         {
             public int x, y;
             public ColoredText sprite;
-            public int moveCooldown = 60; // frames between moves
+            public int moveCooldown = 60;
             public int currentFrame = 0;
 
-            // New: hit cooldown so player doesn't take damage every frame
             public int hitCooldownFrames = 30;
             public int currentHitFrame = 0;
 
-            public int health = 30; // New: slime health
+            public int health = 30;
 
             public Slime(int x, int y)
             {
@@ -48,7 +51,6 @@ namespace MohawkTerminalGame
             }
         }
 
-        /// Run once before Execute begins
         public void Setup()
         {
             Program.TerminalExecuteMode = TerminalExecuteMode.ExecuteTime;
@@ -58,38 +60,28 @@ namespace MohawkTerminalGame
             Terminal.SetTitle("Dungeon Crawler Sample");
             Terminal.CursorVisible = false;
 
-            // Initialize map
             map = new(39, 18, background);
 
-            // Draw map
             DrawMap();
-
-            // Draw player
             DrawCharacter(playerX, playerY, player);
 
-            // Add some slimes
+            // Add slimes
             slimes.Add(new Slime(10, 3));
-          //  slimes.Add(new Slime(12, 8));
             slimes.Add(new Slime(18, 7));
-            // slimes.Add(new Slime(5, 10));
             slimes.Add(new Slime(20, 4));
             slimes.Add(new Slime(31, 4));
 
-            // Draw initial slimes
             foreach (var slime in slimes)
                 DrawCharacter(slime.x, slime.y, slime.sprite);
         }
 
-        /// Called every frame
         public void Execute()
         {
             if (activeGameMode == GameMode.Adventure)
             {
                 frameCounter++;
 
-                // Move player
                 CheckMovePlayer();
-
                 if (inputChanged)
                 {
                     ResetCell(oldPlayerX, oldPlayerY);
@@ -97,10 +89,8 @@ namespace MohawkTerminalGame
                     inputChanged = false;
                 }
 
-                // Player attacks
                 PlayerAttack();
 
-                // Move slimes slowly
                 foreach (var slime in slimes)
                 {
                     slime.currentFrame++;
@@ -110,13 +100,22 @@ namespace MohawkTerminalGame
                         slime.currentFrame = 0;
                     }
 
-                    // Update hit cooldown counter
                     if (slime.currentHitFrame > 0)
                         slime.currentHitFrame--;
                 }
 
-                // Check for collisions after all slimes have moved
                 CheckSlimeCollisions();
+
+                // If all slimes dead and player alive, switch to story mode
+                if (slimes.Count == 0 && !playerDied)
+                {
+                    playerDied = false;
+                    SwitchToStoryMode();
+                }
+            }
+            else if (activeGameMode == GameMode.Story)
+            {
+                DisplayStoryScreen();
             }
         }
 
@@ -146,7 +145,6 @@ namespace MohawkTerminalGame
             }
         }
 
-        /// Player attack method (spacebar)
         void PlayerAttack()
         {
             if (Input.IsKeyPressed(ConsoleKey.Spacebar))
@@ -155,11 +153,10 @@ namespace MohawkTerminalGame
 
                 foreach (var slime in slimes)
                 {
-                    // Check if slime is adjacent (up, down, left, right)
                     if ((Math.Abs(slime.x - playerX) == 1 && slime.y == playerY) ||
                         (Math.Abs(slime.y - playerY) == 1 && slime.x == playerX))
                     {
-                        slime.health -= 5; // Deal 5 damage
+                        slime.health -= 5;
                         Console.SetCursorPosition(0, map.Height + 2);
                         Console.WriteLine($"Hit slime at ({slime.x},{slime.y})! Health: {slime.health}   ");
 
@@ -168,7 +165,6 @@ namespace MohawkTerminalGame
                     }
                 }
 
-                // Remove dead slimes
                 foreach (var dead in slimesToRemove)
                 {
                     ResetCell(dead.x, dead.y);
@@ -177,28 +173,22 @@ namespace MohawkTerminalGame
             }
         }
 
-        /// Move a slime one step toward the player
         void MoveSlime(Slime slime)
         {
-            // Restore the floor behind the slime
             ResetCell(slime.x, slime.y);
 
             int dx = Math.Sign(playerX - slime.x);
             int dy = Math.Sign(playerY - slime.y);
 
-            // If both directions are possible, randomly choose one
             if (dx != 0 && dy != 0)
             {
-                if (Random.Bool()) // 0 = move horizontally, 1 = move vertically
-                    dy = 0;  // cancel vertical movement
-                else
-                    dx = 0;  // cancel horizontal movement
+                if (Random.Bool()) dy = 0;
+                else dx = 0;
             }
 
             int newX = slime.x + dx;
             int newY = slime.y + dy;
 
-            // Only move if walkable and not into player
             if (IsWalkable(newX, slime.y) && !(newX == playerX && slime.y == playerY))
                 slime.x = newX;
 
@@ -208,28 +198,41 @@ namespace MohawkTerminalGame
             DrawCharacter(slime.x, slime.y, slime.sprite);
         }
 
-        /// Check if any slime touches the player
         void CheckSlimeCollisions()
         {
+            if (activeGameMode != GameMode.Adventure)
+                return;
+
             foreach (var slime in slimes)
             {
-                if (slime.x == playerX && slime.y == playerY)
+                bool touching =
+                    (Math.Abs(slime.x - playerX) == 1 && slime.y == playerY) ||
+                    (Math.Abs(slime.y - playerY) == 1 && slime.x == playerX) ||
+                    (slime.x == playerX && slime.y == playerY);
+
+                if (touching && slime.currentHitFrame == 0)
                 {
-                    if (slime.currentHitFrame == 0)
-                    {
-                        playerHealth -= 2;
-                        slime.currentHitFrame = slime.hitCooldownFrames; // reset hit cooldown
-                        Console.SetCursorPosition(0, map.Height + 1);
-                        Console.WriteLine($"Player hit! Health: {playerHealth}  ");
-                    }
+                    playerHealth -= 2;
+                    slime.currentHitFrame = slime.hitCooldownFrames;
+                    Console.SetCursorPosition(0, map.Height + 1);
+                    Console.WriteLine($"Player hit by slime! Health: {playerHealth}   ");
                 }
+
+                if (slime.currentHitFrame > 0)
+                    slime.currentHitFrame--;
+            }
+
+            if (playerHealth <= 0 && !playerDied)
+            {
+                playerDied = true;
+                SwitchToStoryMode();
             }
         }
 
         void DrawCharacter(int x, int y, ColoredText character)
         {
             ColoredText mapTile = map.Get(x, y);
-            character.bgColor = mapTile.bgColor; // copy background color
+            character.bgColor = mapTile.bgColor;
             map.Poke(x, y, character);
         }
 
@@ -241,20 +244,17 @@ namespace MohawkTerminalGame
 
         bool IsWalkable(int x, int y)
         {
-            ColoredText tile = map.Get(x, y);
-            // Only floor tiles are walkable
-            return tile.text == "░";
+            return map.Get(x, y).text == "░";
         }
 
         public void DrawMap()
         {
-            string mapText = Maps.map2;
+            string mapText = Maps.map1;
             string[] lines = mapText.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
 
             for (int y = 0; y < lines.Length; y++)
             {
                 string line = lines[y];
-
                 for (int x = 0; x < line.Length; x++)
                 {
                     char c = line[x];
@@ -275,8 +275,65 @@ namespace MohawkTerminalGame
                     map.Set(new ColoredText(c.ToString(), fg, bg), x, y);
                 }
             }
-
             Console.ResetColor();
+        }
+
+        void SwitchToStoryMode()
+        {
+            activeGameMode = GameMode.Story;
+            storyScreenDrawn = false;
+        }
+
+        void SwitchToAdventureMode()
+        {
+            activeGameMode = GameMode.Adventure;
+            storyScreenDrawn = false;
+            playerDied = false;
+
+            Console.Clear();
+            DrawMap();
+            DrawCharacter(playerX, playerY, player);
+            foreach (var slime in slimes)
+                DrawCharacter(slime.x, slime.y, slime.sprite);
+        }
+
+        void DisplayStoryScreen()
+        {
+            if (!storyScreenDrawn)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("──────────── STORY MODE ────────────");
+                Console.WriteLine();
+
+                if (playerDied)
+                {
+                    Console.WriteLine("Your vision fades as the last blow lands...");
+                    Console.WriteLine("The dungeon claims another soul.");
+                    Console.WriteLine();
+                    Console.WriteLine("Press [Enter] to reflect on your journey.");
+                }
+                else
+                {
+                    Console.WriteLine("Welcome to the dungeon. Press [Enter] to begin your adventure.");
+                }
+
+                Console.ResetColor();
+                storyScreenDrawn = true;
+            }
+
+            if (Input.IsKeyPressed(ConsoleKey.Enter))
+            {
+                if (playerDied || slimes.Count == 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("To be continued...");
+                }
+                else
+                {
+                    SwitchToAdventureMode();
+                }
+            }
         }
     }
 }

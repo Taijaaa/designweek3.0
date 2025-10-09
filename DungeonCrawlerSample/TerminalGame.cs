@@ -38,6 +38,8 @@ namespace MohawkTerminalGame
             public int hitCooldownFrames = 30;
             public int currentHitFrame = 0;
 
+            public int health = 30; // New: slime health
+
             public Slime(int x, int y)
             {
                 this.x = x;
@@ -66,9 +68,10 @@ namespace MohawkTerminalGame
             DrawCharacter(playerX, playerY, player);
 
             // Add some slimes
-            slimes.Add(new Slime(10, 5));
-            slimes.Add(new Slime(9, 6));
-            slimes.Add(new Slime(11, 7));
+            slimes.Add(new Slime(10, 3));
+            slimes.Add(new Slime(12, 9));
+          //  slimes.Add(new Slime(5, 10));
+           // slimes.Add(new Slime(5, 10));
 
             // Draw initial slimes
             foreach (var slime in slimes)
@@ -91,6 +94,9 @@ namespace MohawkTerminalGame
                     DrawCharacter(playerX, playerY, player);
                     inputChanged = false;
                 }
+
+                // Player attacks
+                PlayerAttack();
 
                 // Move slimes slowly
                 foreach (var slime in slimes)
@@ -135,6 +141,37 @@ namespace MohawkTerminalGame
                 playerY = newY;
                 if (oldPlayerX != playerX || oldPlayerY != playerY)
                     inputChanged = true;
+            }
+        }
+
+        /// Player attack method (spacebar)
+        void PlayerAttack()
+        {
+            if (Input.IsKeyPressed(ConsoleKey.Spacebar))
+            {
+                List<Slime> slimesToRemove = new();
+
+                foreach (var slime in slimes)
+                {
+                    // Check if slime is adjacent (up, down, left, right)
+                    if ((Math.Abs(slime.x - playerX) == 1 && slime.y == playerY) ||
+                        (Math.Abs(slime.y - playerY) == 1 && slime.x == playerX))
+                    {
+                        slime.health -= 5; // Deal 5 damage
+                        Console.SetCursorPosition(0, map.Height + 2);
+                        Console.WriteLine($"Hit slime at ({slime.x},{slime.y})! Health: {slime.health}   ");
+
+                        if (slime.health <= 0)
+                            slimesToRemove.Add(slime);
+                    }
+                }
+
+                // Remove dead slimes
+                foreach (var dead in slimesToRemove)
+                {
+                    ResetCell(dead.x, dead.y);
+                    slimes.Remove(dead);
+                }
             }
         }
 

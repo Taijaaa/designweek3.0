@@ -31,7 +31,7 @@ namespace MohawkTerminalGame
         {
             public int x, y;
             public ColoredText sprite;
-            public int moveCooldown = 40; // frames between moves
+            public int moveCooldown = 60; // frames between moves
             public int currentFrame = 0;
 
             // New: hit cooldown so player doesn't take damage every frame
@@ -69,9 +69,11 @@ namespace MohawkTerminalGame
 
             // Add some slimes
             slimes.Add(new Slime(10, 3));
-            slimes.Add(new Slime(12, 9));
-          //  slimes.Add(new Slime(5, 10));
-           // slimes.Add(new Slime(5, 10));
+          //  slimes.Add(new Slime(12, 8));
+            slimes.Add(new Slime(18, 7));
+            // slimes.Add(new Slime(5, 10));
+            slimes.Add(new Slime(20, 4));
+            slimes.Add(new Slime(31, 4));
 
             // Draw initial slimes
             foreach (var slime in slimes)

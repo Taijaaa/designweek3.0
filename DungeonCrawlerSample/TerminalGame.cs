@@ -580,27 +580,15 @@ How to play:
 -> Make choices in the story using the indicated key.
 -> Press SPACEBAR to attack adjacent enemies.
 -----------------------------------------------------------------------------------------------------
-
 This is your final test to prove yourself worthy to Omarious, the lead councilman of Angrulia. 
-
 Many have tried before, but those who ventured out never returned. Your task is to track down Helsadona,
-
 the banished witch who dwells deep within the cave at the edge of the local forest and bring back her heart.
-
 You walk alongside a forest elf guiding you toward your destination. 
-
 He speaks of the town’s resentment toward Helsadona, how many believe she is the cause of the havoc and chaos that 
-
-plagues Angrulia. She was once a councilwoman of Angrulia, until
-
-a falling out with Omarious led to her banishment. To this day no one knows what truly happened between them.
-
-As you reach the crumbling cave entrance, the elf turns to you. “She is the most powerful being 
-
-this town has ever seen. You will need something to defend yourself.” With a flick of his wrist, 
-
-a golden glow appears before you. Within it float two weapons:
-
+plagues Angrulia. She was once a councilwoman of Angrulia, until a falling out with Omarious led to her banishment.
+To this day no one knows what truly happened between them. As you reach the crumbling cave entrance, 
+the elf turns to you. “She is the most powerful being this town has ever seen. You will need something to 
+defend yourself.” With a flick of his wrist, a golden glow appears before you. Within it float two weapons:
 a scepter and a sword. “Which one calls to you?”
 
                                                ██

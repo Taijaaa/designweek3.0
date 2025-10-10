@@ -87,8 +87,8 @@ namespace MohawkTerminalGame
         {
             public Spider(int x, int y) : base(x, y, "✵")
             {
-                moveCooldown = 30;
-                health = 75;
+                moveCooldown = 50;
+                health = 60;
             }
 
             public override void Move(int playerX, int playerY, TerminalGridWithColor map)
@@ -111,7 +111,7 @@ namespace MohawkTerminalGame
         {
             public BabySpider(int x, int y) : base(x, y, "⋆")
             {
-                moveCooldown = 60;
+                moveCooldown = 65;
                 health = 30;
             }
 

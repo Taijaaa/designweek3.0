@@ -87,8 +87,8 @@ namespace MohawkTerminalGame
         {
             public Spider(int x, int y) : base(x, y, "✵")
             {
-                moveCooldown = 60;
-                health = 50;
+                moveCooldown = 30;
+                health = 75;
             }
 
             public override void Move(int playerX, int playerY, TerminalGridWithColor map)
@@ -111,7 +111,7 @@ namespace MohawkTerminalGame
         {
             public BabySpider(int x, int y) : base(x, y, "⋆")
             {
-                moveCooldown = 90;
+                moveCooldown = 60;
                 health = 30;
             }
 
@@ -137,8 +137,8 @@ namespace MohawkTerminalGame
 
             public Scorpion(int x, int y) : base(x, y, "𓆌")
             {
-                moveCooldown = 40;
-                health = 60;
+                moveCooldown = 30;
+                health = 80;
             }
 
             public override void Move(int playerX, int playerY, TerminalGridWithColor map)
@@ -393,7 +393,7 @@ namespace MohawkTerminalGame
                             DrawCharacter(playerX, playerY, player);
                         }
 
-                        scorpion.pushCooldownFrames = 300; // 2s cooldown
+                        scorpion.pushCooldownFrames = 90; // 2s cooldown
                         scorpion.currentHitFrame = scorpion.hitCooldownFrames;
 
                         Console.SetCursorPosition(0, map.Height + 1);
@@ -511,8 +511,9 @@ namespace MohawkTerminalGame
                     break;
                 case 2:
                     enemies.Add(new Spider(5, 4));
-                    enemies.Add(new BabySpider(12, 9));
-                    enemies.Add(new BabySpider(19, 6));
+                    enemies.Add(new BabySpider(20, 9));
+                    enemies.Add(new BabySpider(24, 6));
+                    enemies.Add(new BabySpider(8, 6));
                     break;
                 case 3:
                     enemies.Add(new Scorpion(20, 9));
@@ -598,9 +599,9 @@ As you reach the crumbling cave entrance, the elf turns to you. “She is the mo
 
 this town has ever seen. You will need something to defend yourself.” With a flick of his wrist, 
 
-a golden glow appears before you. Within it float three weapons:
+a golden glow appears before you. Within it float two weapons:
 
-a scepter, a sword, and a spear. “Which one calls to you?”
+a scepter and a sword. “Which one calls to you?”
 
                                                ██
                                               ████
@@ -687,12 +688,12 @@ You come across another opening in the stone and continue your journey inside.
 
 
 You’ve been walking these tunnels for a while now and you’ve noticed the increasingly alarming amount of spider
-webs stream from wall to wall. It is so dense with webs at this point your arms are no match for them.
-You draw your {chosenWeapon} and begin to. Every slice sends vibrations into the darkness, you continue
-cutting while cursing under your breath, after cutting a particularly large web you hear a high pitched screech;
-one so loud you fall to your knees in pain. While on the ground you're horrified by the sight of a colossal spider
-descending from the ceiling. Baby spiders are scattered around about behind it. In a quick motion you grab your
-{chosenWeapon} and ready yourself for a fight.
+webs streaming from wall to wall. It is so dense with webs at this point your arms are no match for them anymore. 
+You draw your {chosenWeapon} and begin to hack your way through. Every slice sends vibrations into the darkness, 
+you continue cutting while cursing under your breath until cutting a particularly thick web you hear a high-pitched
+screech; one so loud you  fall to your knees in pain. While on the ground covering your ears, you're horrified 
+by the sight of a colossal spider descending from the ceiling. Baby spiders are scattered about behind it. 
+In a quick motion ready your {chosenWeapon} and begin to fight.
 ");
 
                                     // clear any leftover keypress before the pause
@@ -726,8 +727,8 @@ You’ve been walking these tunnels for a while now and you’ve noticed the inc
 webs streaming from wall to wall. It is so dense with webs at this point your arms are no match for them anymore. 
 You draw your {chosenWeapon} and begin to hack your way through. Every slice sends vibrations into the darkness, 
 you continue cutting while cursing under your breath until cutting a particularly thick web you hear a high-pitched
-screech; one so loud you almost fall to your knees in pain. While on the ground covering your ears, you're horrified 
-by the sight of a colossal spider descending from the ceiling. Baby spiders are scattered about behind them. 
+screech; one so loud you  fall to your knees in pain. While on the ground covering your ears, you're horrified 
+by the sight of a colossal spider descending from the ceiling. Baby spiders are scattered about behind it. 
 In a quick motion ready your {chosenWeapon} and begin to fight.
 ");
                                     // clear any leftover keypress before the pause
@@ -843,6 +844,7 @@ It is infused with the scorpion’s poison! You are now one step closer to gaini
 the dragon. You brush the grime off your clothes and scan the cave ahead. At the backside of the chamber,
 one tunnel opening is before you, leading deeper into the unknown. 
 
+
 Press [Enter] to continue:");
 
                                 if (Input.IsKeyPressed(ConsoleKey.Enter))
@@ -929,7 +931,7 @@ Type [Y] for Yes or [N] for No:
                                     Console.WriteLine($@"Helsadona smiles as you lower your weapon, approaching you quietly. “I knew I
 could help you seek reason. Please, allow me to heal your wounds.”She takes your hand gently in hers, and a 
 warm sensation flows through you. All the injuries you sustained through your adventure healed within seconds, 
-and you felt reinvigorated immediately.“Please, let us exit this wretched cave and take care of Omarion once 
+and you felt rejueventad.“Please, let us exit this wretched cave and take care of Omarious once 
 and for all. He won’t stand a chance against us both.” You backtrack through the caverns with Helsadona following 
 behind. Any creatures you encounter on your journey back to Angrulia sense your alliance with the Helsdona and 
 letyou pass without trouble. Now in possession of immense power, you two swiftly make your way through the town 

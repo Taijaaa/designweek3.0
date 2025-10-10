@@ -133,10 +133,12 @@ namespace MohawkTerminalGame
 
         class Scorpion : Enemy
         {
+            public int pushCooldownFrames = 0; // frames until next push allowed
+
             public Scorpion(int x, int y) : base(x, y, "𓆌")
             {
                 moveCooldown = 40;
-                health = 35;
+                health = 60;
             }
 
             public override void Move(int playerX, int playerY, TerminalGridWithColor map)
@@ -155,8 +157,11 @@ namespace MohawkTerminalGame
 
                 if (map.Get(x, newY).text == "░" && !(x == playerX && newY == playerY))
                     y = newY;
+
+                if (pushCooldownFrames > 0) pushCooldownFrames--;
             }
         }
+
 
         class FireBullet
         {
@@ -361,21 +366,57 @@ namespace MohawkTerminalGame
                     (enemy.y == playerY && Math.Abs(enemy.x - playerX) == 1) ||
                     (enemy.x == playerX && enemy.y == playerY);
 
-                if (touching && enemy.currentHitFrame == 0)
+                // === Scorpion special push-back ===
+                if (enemy is Scorpion scorpion && touching)
                 {
+                    // Reduce cooldown every frame
+                    if (scorpion.pushCooldownFrames > 0)
+                        scorpion.pushCooldownFrames--;
+
+                    // Only trigger push if cooldown is ready
+                    if (scorpion.pushCooldownFrames == 0)
+                    {
+                        playerHealth -= 10;
+
+                        // Push player 2 tiles away from scorpion
+                        int pushX = playerX + Math.Sign(playerX - scorpion.x) * 2;
+                        int pushY = playerY + Math.Sign(playerY - scorpion.y) * 2;
+
+                        pushX = Math.Clamp(pushX, 0, map.Width - 1);
+                        pushY = Math.Clamp(pushY, 0, map.Height - 1);
+
+                        if (IsWalkable(pushX, pushY))
+                        {
+                            ResetCell(playerX, playerY);
+                            playerX = pushX;
+                            playerY = pushY;
+                            DrawCharacter(playerX, playerY, player);
+                        }
+
+                        scorpion.pushCooldownFrames = 300; // 2s cooldown
+                        scorpion.currentHitFrame = scorpion.hitCooldownFrames;
+
+                        Console.SetCursorPosition(0, map.Height + 1);
+                        Console.WriteLine($"Player hit and pushed by {scorpion.sprite.text}! Health: {playerHealth}   ");
+                    }
+                }
+                else if (touching && enemy.currentHitFrame == 0)
+                {
+                    // === Default melee collision for all other enemies ===
                     playerHealth -= 2;
                     enemy.currentHitFrame = enemy.hitCooldownFrames;
                     Console.SetCursorPosition(0, map.Height + 1);
                     Console.WriteLine($"Player hit by {enemy.sprite.text}! Health: {playerHealth}   ");
                 }
 
+                // === Dragon fire collision (unchanged) ===
                 if (enemy is Dragon dragon)
                 {
                     foreach (var bullet in dragon.bullets)
                     {
                         if (bullet.x == playerX && bullet.y == playerY)
                         {
-                            playerHealth -= 5;
+                            playerHealth -= 7;
                             bullet.isAlive = false;
                             Console.SetCursorPosition(0, map.Height + 1);
                             Console.WriteLine($"Player hit by fire! Health: {playerHealth}   ");
@@ -394,6 +435,7 @@ namespace MohawkTerminalGame
                 storyScreenDrawn = false;
             }
         }
+
 
         void DrawCharacter(int x, int y, ColoredText character)
         {
@@ -463,14 +505,14 @@ namespace MohawkTerminalGame
             {
                 case 1:
                     enemies.Add(new Slime(20, 6));
-                    enemies.Add(new Slime(17, 9));
-                    enemies.Add(new Slime(19, 7));
-                    enemies.Add(new Slime(18, 8));
+                    enemies.Add(new Slime(30, 4));
+                    enemies.Add(new Slime(7, 7));
+                    enemies.Add(new Slime(18, 1));
                     break;
                 case 2:
-                    enemies.Add(new BabySpider(12, 4));
-                    enemies.Add(new BabySpider(12, 4));
-                    enemies.Add(new BabySpider(12, 4));
+                    enemies.Add(new Spider(5, 4));
+                    enemies.Add(new BabySpider(12, 9));
+                    enemies.Add(new BabySpider(19, 6));
                     break;
                 case 3:
                     enemies.Add(new Scorpion(20, 9));
@@ -505,7 +547,7 @@ namespace MohawkTerminalGame
             {
                 case 1: playerX = 1; playerY = 8; break;
                 case 2: playerX = 3; playerY = 10; break;
-                case 3: playerX = 10; playerY = 7; break;
+                case 3: playerX = 10; playerY = 13; break;
                 case 4: playerX = 10; playerY = 5; break;
             }
 

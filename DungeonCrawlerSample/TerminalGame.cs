@@ -22,6 +22,8 @@ namespace MohawkTerminalGame
         int oldPlayerY;
         bool inputChanged;
 
+
+
         // Enemies
         List<Enemy> enemies = new();
         int frameCounter = 0;
@@ -109,7 +111,7 @@ namespace MohawkTerminalGame
         {
             public BabySpider(int x, int y) : base(x, y, "⋆")
             {
-                moveCooldown = 120;
+                moveCooldown = 90;
                 health = 30;
             }
 
@@ -193,7 +195,7 @@ namespace MohawkTerminalGame
             {
                 moveCooldown = 0;
                 health = 100;
-                fireCooldown = 80;
+                fireCooldown = 95;
             }
 
             public int fireCooldown;
@@ -234,7 +236,7 @@ namespace MohawkTerminalGame
             Program.TerminalInputMode = TerminalInputMode.EnableInputDisableReadLine;
             Program.TargetFPS = 60;
 
-            Terminal.SetTitle("Dungeon Crawler Sample");
+            Terminal.SetTitle("The Heart of Deception");
             Terminal.CursorVisible = false;
 
             map = new(39, 18, background);
@@ -460,13 +462,18 @@ namespace MohawkTerminalGame
             switch (currentMapIndex)
             {
                 case 1:
-                    enemies.Add(new Slime(18, 7));
+                    enemies.Add(new Slime(20, 6));
+                    enemies.Add(new Slime(17, 9));
+                    enemies.Add(new Slime(19, 7));
+                    enemies.Add(new Slime(18, 8));
                     break;
                 case 2:
                     enemies.Add(new BabySpider(12, 4));
+                    enemies.Add(new BabySpider(12, 4));
+                    enemies.Add(new BabySpider(12, 4));
                     break;
                 case 3:
-                    enemies.Add(new Scorpion(22, 7));
+                    enemies.Add(new Scorpion(20, 9));
                     break;
                 case 4:
                     enemies.Add(new Dragon(15, 5));
@@ -510,16 +517,28 @@ namespace MohawkTerminalGame
         //================== Story Screen ==================//
         void DisplayStoryScreen()
         {
+           //onsole.Clear();
             if (!storyScreenDrawn)
             {
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("──────────── STORY MODE ────────────\n");
-
+                Console.ForegroundColor = ConsoleColor.White;
+                //onsole.WriteLine("──────────── STORY MODE ────────────\n");
+               
                 if (!firstStoryPlayed)
                 {
                     Console.WriteLine(
-@"This is your final test to prove yourself worthy to Omarious, the lead councilman of Angrulia. 
+@"
+▀█▀ █░█ █▀▀   █░█ █▀▀ ▄▀█ █▀█ ▀█▀   █▀█ █▀▀   █▀▄ █▀▀ █▀▀ █▀▀ █▀█ ▀█▀ █ █▀█ █▄░█
+░█░ █▀█ ██▄   █▀█ ██▄ █▀█ █▀▄ ░█░   █▄█ █▀░   █▄▀ ██▄ █▄▄ ██▄ █▀▀ ░█░ █ █▄█ █░▀█
+
+How to play:
+
+-> Use the arrow keys to move your character.
+-> Make choices in the story using the indicated key.
+-> Press SPACEBAR to attack adjacent enemies.
+-----------------------------------------------------------------------------------------------------
+
+This is your final test to prove yourself worthy to Omarious, the lead councilman of Angrulia. 
 
 Many have tried before, but those who ventured out never returned. Your task is to track down Helsadona,
 
@@ -541,15 +560,57 @@ a golden glow appears before you. Within it float three weapons:
 
 a scepter, a sword, and a spear. “Which one calls to you?”
 
-[S] Scepter  [W] Sword  [P] Spear"
-                    );
+                                               ██
+                                              ████
+                     ▓▓                      █████
+                ▒░░▒▓█████                  ████▓▓
+               ▒░▒▓▓███▓▓▓                 ▓████▓ 
+               ▒░░▓███▓░▒▒                ▓████▓  
+                ▒░░▒▓▒░░▒▒               ▓████▓   
+                ░░░░░▒▒▒                 ▓███▓▓   
+                ░░░░▒▒                  ▓███▓▓    
+               ░░░░░                   ▓███▓▓     
+               ░░▒▒                    ▓██▓▓      
+              ░░░▒▒                   ▓██▓▓       
+             ░░░▒                    ▓███▓        
+            ▒░▒▒                     ███▓         
+           ▒░░▒▒                    ▓██▓▓         
+          ░░░▒▒                    ▓██▓▓          
+         ▒░░▒▒                    ▓██▓▓           
+         ░░▒▒                    ███▓▓            
+        ░░▒▒                   ███▓▓▓▓            
+       ░░▒▒                ▓   ▓▒░▒█▓             
+      ▒░▒▒                 ░▒▓▒░▒▒░█              
+     ▒░░▒▒                  ▒▒▒▒▒▒░               
+    ▒░░▒▒                     ░░░▒▒▒░░░           
+   ▒░░▒▒▒                    ░░░                  
+  ▒░░▒▒▒▒                   ░░░                   
+ ▒░░▒▒▒▒▒                  ▒░░░                   
+▒░▒▒  ░░▒                 ▒▒▒▒                    
+░░▒▒                    ▓▒▒▒░                     
+  ▒                      ░░░▒                     
 
+
+[S] Scepter  [W] Sword"
+                    ); 
+                   
                     // Weapon choice handled per frame
                     storyScreenDrawn = true;
+                    
                 }
                 else if (playerDied)
                 {
-                    Console.WriteLine("You have fallen in battle... Press [Enter] to retry this map.");
+                   
+                    Console.WriteLine( $@"You kept fighting until you couldn't anymore. 
+
+Your wounds are too deep, your strength is gone, and every breath is a challenge. 
+
+You know it's over. Just like the others who tried, you failed.  
+
+Your bones will lie here, another warning to anyone who comes after. 
+
+
+Press [Enter] to retry this map.");
                 }
                 else
                 {
@@ -560,28 +621,43 @@ a scepter, a sword, and a spear. “Which one calls to you?”
                             {
                                 Console.WriteLine(
                             $@"After vanquishing the horde of slimes, your {chosenWeapon} glows green.
-
 It is magically infused with the slimes’ Plasma-Goo! You are now one step closer to gaining the power
 needed to slay the dragon. You brush the grime off your clothes and scan the cave ahead. 
-
 On the far side of the cavern, two more tunnel openings gape,
 each leading deeper into the unknown. Which path will you take?
+
 
 Type [L] for left or [R] for right:");
 
                                 if (Input.IsKeyPressed(ConsoleKey.L))
                                 {
                                     Console.Clear();
-                                    Console.WriteLine($@"You enter the left tunnel and begin your descent. As you move deeper, your hands brush along the rough stone walls while your feet sink softly into a bed of moss. The darkness makes it nearly impossible to see. You raise your {chosenWeapon} and it emits a faint magical glow.
-The passage opens into a wide chamber. The light dances across the rocks, revealing a faded mural. You step closer. Helsadona is depicted, surrounded by wildlife. Foxes and deer bow willingly at her feet, an owl perched upon her shoulder nestles into her neck.
-You reach out to press your hand against the mural. A wave of warmth flows through you, calm and strange, stealing your breath for a moment. Goosebumps cover your skin as you stumble back, catching your heel on a small pile of healing mushrooms, unrooted from the ground. For a moment you hesitate and think, “Did Helsadona leave these behind?” You pick up a mushroom and eat it, rejuvenating your body. You come across another opening in the stone and continue your journey inside.
+                                    Console.WriteLine($@"You enter the left tunnel and begin your descent. As you move deeper, your hands brush along the rough stone 
+walls while your feet sink softly into a bed of moss. The darkness makes it nearly impossible to see. 
+You raise your {chosenWeapon} and it emits a faint magical glow. The passage opens into a wide chamber.
+The light dances across the rocks,revealing a faded mural. You step closer. Helsadona is depicted,
+surrounded by wildlife. Foxes and deer bow willingly at her feet, an owl perched upon her shoulder nestles
+into her neck. You reach out to press your hand against the mural. A wave of warmth flows through you,
+calm yet strange, stealing your breath for a moment. Goosebumps cover your skin as you stumble back,
+catching your heel on a small pile of healing mushrooms.For a moment you hesitate and think,
+“Did Helsadona leave these behind?” You pick up a mushroom and eat it, rejuvenating your body.
+You come across another opening in the stone and continue your journey inside. 
+
+
+You’ve been walking these tunnels for a while now and you’ve noticed the increasingly alarming amount of spider
+webs stream from wall to wall. It is so dense with webs at this point your arms are no match for them.
+You draw your {chosenWeapon} and begin to. Every slice sends vibrations into the darkness, you continue
+cutting while cursing under your breath, after cutting a particularly large web you hear a high pitched screech;
+one so loud you fall to your knees in pain. While on the ground you're horrified by the sight of a colossal spider
+descending from the ceiling. Baby spiders are scattered around about behind it. In a quick motion you grab your
+{chosenWeapon} and ready yourself for a fight.
 ");
 
                                     // clear any leftover keypress before the pause
                                     while (Console.KeyAvailable) Console.ReadKey(true);
 
                                     Console.WriteLine("\nPress Enter twice to continue...");
-                                    //  Console.ReadKey(true);
+                                      Console.ReadKey(true);
                                   if (  Input.IsKeyPressed(ConsoleKey.Enter))
                                         currentMapIndex = 2;
                                     SwitchToAdventureMode();
@@ -590,11 +666,28 @@ You reach out to press your hand against the mural. A wave of warmth flows throu
                                 else if (Input.IsKeyPressed(ConsoleKey.R))
                                 {
                                     Console.Clear();
-                                    Console.WriteLine($@"You enter the right tunnel and begin your trek into the shadows. The sound of dripping water echoes like a ticking clock. Your footsteps crunch over brittle bones half-buried in the dirt. Your surroundings darken with each step, you raise your {chosenWeapon} and it emits a faint magical glow. As your eyes adjust to the light, carvings etched into the walls come into view. You wipe away the dirt and dust, and the images come to life.
-They tell stories both twisted and cruel. Helsadona, cloaked in all black, stands over fallen creatures, their heads decapitated at her feet. In another carving, she drains the life from the forest itself, roots curling away from her touch. A third one captures your attention, a serpent coiled across the stone. Your finger follows its blood-stained scales from tail to head till you reach where you expect to see the serpent's face, but it is no serpent at all. It is Helsadona, jaw unhinged as she devours an innocent child.
-A cold shiver races down your spine. You tear your gaze away from the gruesome depictions and continue your steps through the tunnel. You come across another opening in the stone and continue your journey inside.
-");
+                                    Console.WriteLine($@"You enter the right tunnel and begin your trek into the shadows. The sound of dripping water echoes like
+a ticking clock. Your footsteps crunch over brittle bones half-buried in the dirt. Your surroundings
+darken with each step, you raise your {chosenWeapon} and it emits a faint magical glow. As your eyes
+adjust to the light, carvings etched into the walls come into view. You wipe away the dirt and dust,
+and the images come to life. They tell stories both twisted and cruel. Helsadona, cloaked in all black,
+stands over fallen creatures, their heads decapitated at her feet. In another carving, she drains the life
+from the forest itself, roots curling away from her touch. A third one captures your attention, a serpent
+coiled across the stone. Your finger follows its blood-stained scales from tail to head till you reach where
+you expect to see the serpent's face, but it is no serpent at all. It is Helsadona, jaw unhinged as she
+devours an innocent child. A cold shiver races down your spine. You tear your gaze away from the gruesome
+depictions and continue your steps through the tunnel. You come across another opening in the stone
+and continue your journey inside. 
 
+
+You’ve been walking these tunnels for a while now and you’ve noticed the increasingly alarming amount of spider
+webs streaming from wall to wall. It is so dense with webs at this point your arms are no match for them anymore. 
+You draw your {chosenWeapon} and begin to hack your way through. Every slice sends vibrations into the darkness, 
+you continue cutting while cursing under your breath until cutting a particularly thick web you hear a high-pitched
+screech; one so loud you almost fall to your knees in pain. While on the ground covering your ears, you're horrified 
+by the sight of a colossal spider descending from the ceiling. Baby spiders are scattered about behind them. 
+In a quick motion ready your {chosenWeapon} and begin to fight.
+");
                                     // clear any leftover keypress before the pause
                                     while (Console.KeyAvailable) Console.ReadKey(true);
 
@@ -609,38 +702,320 @@ A cold shiver races down your spine. You tear your gaze away from the gruesome d
                                 return; // wait for L or R
                             }
 
-
-                            // If neither key pressed yet, wait for next frame
-                            
-                            
-
-
                         case 2:
-                            Console.WriteLine(
-                    @"The spider and her brood are vanquished. You notice strange markings on the walls, hinting at deeper secrets.
+                            {
+                                Console.WriteLine(
+                            $@"You swiftly pulverize the colossal spider, your {chosenWeapon} glows purple. 
+It is infused with spider venom! You are now one step closer to gaining the power needed to slay the dragon.
+You brush the grime off your clothes and scan the cave ahead.  At the backside of the chamber, two more 
+tunnel openings are there, each leading deeper into the unknown. Which path will you take?
 
-Press [Enter] to continue.");
-                            Console.ReadKey(true);
-                            currentMapIndex = 3;
-                            break;
+
+Type [L] for left or [R] for right:");
+
+                                if (Input.IsKeyPressed(ConsoleKey.L))
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine($@"You choose to explore the left tunnel. You walk for what seems like an eternity before the tunnel finally
+widens into another open chamber. Inside you find a stone pillar with a bronzed plaque on top of it.
+A torn banner hangs from the wall to the right of it. As you approach, it becomes clearer it is the crest of Angrulia.
+You make your way over to the pillar and read the inscription on the plaque. “Helsadona, the wicked, the vile,
+the damned. Her wrath has plagued Angrulia for centuries, causing vast destruction to the once beautiful town.
+Fires erupted throughout the land, houses burned to ash, residents perished, and legacies were lost. Omarious 
+became our light in the time of darkness. He is the only one we can trust.” You back away from the pillar,
+letting the newfound knowledge set in. You swing your head around looking for the next tunnel.On your way
+you pass the tattered crest banner and a sense of determination waves over you. You are doing this for the
+better of the town, for Omarious, right? You make your way through the next tunnel.
+
+
+The tunnel is short, you already see an opening in the near distance. You pick up the pace to get there.
+The moment you step through the opening a wave of movement catches your eye, tiny baby scorpions scatter
+in every direction. You stumble back, picking your feet up frantically to avoid crushing them, but they are
+everywhere, coating the walls and ground. Panic takes over and you break into a sprint, desperate to get away.
+The tunnel narrows, squeezing you between jagged rocks. Scorpions begin to leap from the walls, clinging to
+your clothes and crawling on your skin. You push forward, heart pounding, until the tunnel finally loosens its
+grip and the path widens once more. You see a faint light ahead. You move swiftly toward it, and as it grows
+brighter, its source comes into focus. A gigantic red-glowing scorpion. The beast sets its sight on you, 
+tail lashing the air in anticipation
+
+");
+                                    // clear any leftover keypress before the pause
+                                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                                    Console.WriteLine("\nPress Enter twice to continue...");
+                                    Console.ReadKey(true);
+                                    if (Input.IsKeyPressed(ConsoleKey.Enter))
+                                        currentMapIndex = 3;
+                                    SwitchToAdventureMode();
+                                    return;
+                                }
+                                else if (Input.IsKeyPressed(ConsoleKey.R))
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine($@"You continue onward, a spiderweb still stuck to your boot. This tunnel is barely big enough
+to comfortably maneuver through it. You shrug it off and conitnue till you reach another clearing. A sapling 
+pokes from a crack in the ground, dripping a golden liquid. You look above it, the ceiling is painted in faded 
+colors, cracked and crumbling with age. The painting remains visible despite the decay. It depicts Helsadona,
+arms raised not in aggression, but in defense of the forest. Behind her the forest and all its creatures are
+busied, burned, and harmed. She is not attacking, she stands ready to protect. From the sapling, the golden
+liquid drips steadily, pooling onto the ground. As you approach, a small lizard darts into view at the edge 
+of your vision. You raise your weapon instinctively, but it does not flee. Instead, it seems entirely
+unconcerned by your presence. One of its legs is missing and many scars trailing up its back. It settles by
+the puddle under the sapling, dipping its head down to drink. As it does, the scars begin to fade, and its
+missing leg regenerates. Compelled, you step forward, and the lizard startles, darting away. Without thinking,
+you cup the liquid into your hands and bring it to your lips. Warmth pulses through your body, spreading through
+your skin. One by one, the scars you bear begin to vanish, leaving you whole.
+
+
+The tunnel is short, you already see an opening in the near distance. You pick up the pace to get there.
+The moment you step through the opening a wave of movement catches your eye, tiny baby scorpions scatter
+in every direction. You stumble back, picking your feet up frantically to avoid crushing them, but they are
+everywhere, coating the walls and ground. Panic takes over and you break into a sprint, desperate to get away.
+The tunnel narrows, squeezing you between jagged rocks. Scorpions begin to leap from the walls, clinging to
+your clothes and crawling on your skin. You push forward, heart pounding, until the tunnel finally loosens its
+grip and the path widens once more. You see a faint light ahead. You move swiftly toward it, and as it grows
+brighter, its source comes into focus. A gigantic red-glowing scorpion. The beast sets its sight on you, 
+tail lashing the air in anticipation.
+");
+
+                                    // clear any leftover keypress before the pause
+                                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                                    Console.WriteLine("\nPress Enter twice to continue...");
+                                    Console.ReadKey(true);
+                                    if (Input.IsKeyPressed(ConsoleKey.Enter))
+                                        currentMapIndex = 3;
+                                    SwitchToAdventureMode();
+                                    return;
+                                }
+
+                                return; // wait for L or R
+                            }
+
 
                         case 3:
-                            Console.WriteLine(
-                    @"Scorpions defeated, the desert ruins are eerily silent.
+                            {
+                                Console.WriteLine(
+                            $@"After vanquishing the giant scorpion, your {chosenWeapon} glows red.
+It is infused with the scorpion’s poison! You are now one step closer to gaining the power needed to slay
+the dragon. You brush the grime off your clothes and scan the cave ahead. At the backside of the chamber,
+one tunnel opening is before you, leading deeper into the unknown. 
 
-A distant roar echoes — something big awaits. Press [Enter] to continue.");
-                            Console.ReadKey(true);
-                            currentMapIndex = 4;
-                            break;
+Press [Enter] to continue:");
+
+                                if (Input.IsKeyPressed(ConsoleKey.Enter))
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine($@"As you walk, you begin to wonder where Helsadona could be hiding. It feels like you’ve
+searched every inch of this cave. Up ahead, a small crawl space catches your eye. You move toward it
+and crouch down, slipping inside. The rocks are jagged, scraping against your arms and tearing at your
+clothes, but you keep moving forward. The crawl space tunnel eventually opens into another dark chamber.
+Bats hang motionless from the ceiling, and you stay quiet, careful not to wake them. Near the far wall, 
+you spot a small pile of healing mushrooms. Hunger gnaws at you, you pick one up and eat it. A tingling 
+spreads through your body as your strength returns. A narrow tunnel waits to your left. You take a 
+steady breath and start down the path.
+
+This is strange, you think to yourself. The cave has been ice-cold since you entered, but now, with each step,
+the air grows warmer. Then hot. Sweltering. Sweat beads along your temples, sliding down your face as you wipe
+your brow. Without warning, a deep roar rumbles through the tunnel, shaking the ground beneath your feet. 
+You stumble, catching yourself against the wall. “I’m close,” you whisper under your breath. The roars grow 
+louder, more frequent. The tunnel trembles like an earthquake as you move closer to the source. Just as you 
+round a corner, a wave of fire bursts past your face, scorching the stone  beside you. It’s the dragon. 
+The fire-breathing guardian of Helsadona. You take a step back and ready yourself for the final battle.
+");
+
+                                    // clear any leftover keypress before the pause
+                                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                                    Console.WriteLine("\nPress Enter twice to continue...");
+                                    Console.ReadKey(true);
+                                    if (Input.IsKeyPressed(ConsoleKey.Enter))
+                                        currentMapIndex = 4;
+                                    SwitchToAdventureMode();
+                                    return;
+                                }
+                                else if (Input.IsKeyPressed(ConsoleKey.Enter))
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine($@"As you walk, you begin to wonder where Helsadona could be hiding. It feels like you’ve
+searched every inch of this cave. Up ahead, a small crawl space catches your eye. You move toward it
+and crouch down, slipping inside. The rocks are jagged, scraping against your arms and tearing at your
+clothes, but you keep moving forward. The crawl space tunnel eventually opens into another dark chamber.
+Bats hang motionless from the ceiling, and you stay quiet, careful not to wake them. Near the far wall, 
+you spot a small pile of healing mushrooms. Hunger gnaws at you, you pick one up and eat it. A tingling 
+spreads through your body as your strength returns. A narrow tunnel waits to your left. You take a 
+steady breath. You must be close now, you think, and start down the path.
+
+This is strange, you think to yourself. The cave has been ice-cold since you entered, but now, with each step,
+the air grows warmer. Then hot. Sweltering. Sweat beads along your temples, sliding down your face as you wipe
+your brow. Without warning, a deep roar rumbles through the tunnel, shaking the ground beneath your feet. 
+You stumble, catching yourself against the wall. “I’m close,” you whisper under your breath. The roars grow 
+louder, more frequent. The tunnel trembles like an earthquake as you move closer to the source. Just as you 
+round a corner, another roar splits the air, and a wave of fire bursts past your face, scorching the stone 
+beside you. It’s the dragon. The fire-breathing guardian of Helsadona. You take a step back and ready 
+yourself for the final battle.");
+
+                                    // clear any leftover keypress before the pause
+                                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                                    Console.WriteLine("\nPress Enter twice to continue...");
+                                    Console.ReadKey(true);
+                                    if (Input.IsKeyPressed(ConsoleKey.Enter))
+                                        currentMapIndex = 4;
+                                    SwitchToAdventureMode();
+                                    return;
+                                }
+
+                                return; // wait for L or R
+                            }
 
                         case 4:
-                            Console.WriteLine(
-                    @"The dragon falls! Flames die down and the dungeon feels still.
+                            {
+                                Console.WriteLine(
+                            $@"You stand hovering over the dragon's lifeless body. You hear a whimper from a dark corner of the cavern. 
+You approach the noise. It's Helsadona, she looks scared and hurt. She speaks: “I know Omarious has sent you
+here to kill me, just like he sent others before you. I am not what he says. I have only ever loved and cared 
+for this town. Omarious just wants my power. Please believe me, we can join together and fight against Omarious
+and save Angrulia”. 
 
-Your journey reaches its climax. Press [Enter] to finish.");
-                            Console.ReadKey(true);
-                            // End of game
-                            break;
+Type [Y] for Yes or [N] for No:
+");
+
+                                if (Input.IsKeyPressed(ConsoleKey.Y))
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine($@"Helsadona smiles as you lower your weapon, approaching you quietly. “I knew I
+could help you seek reason. Please, allow me to heal your wounds.”She takes your hand gently in hers, and a 
+warm sensation flows through you. All the injuries you sustained through your adventure healed within seconds, 
+and you felt reinvigorated immediately.“Please, let us exit this wretched cave and take care of Omarion once 
+and for all. He won’t stand a chance against us both.” You backtrack through the caverns with Helsadona following 
+behind. Any creatures you encounter on your journey back to Angrulia sense your alliance with the Helsdona and 
+letyou pass without trouble. Now in possession of immense power, you two swiftly make your way through the town 
+to stormthe council hall, hell-bent on slaying Omarious. You both attack Omarious with all your might. He is 
+no match for Helsdona’s power, she holds him in a trance while you take one last swing of your weapon, killing 
+Omarious. Helsadona and you slowly emerge from the council hall. A crowd of people stand around. You tell them 
+the truth about what happened and everyone begins to cheer. At first, the brutality of your traitorous act towards
+Omarious worried you.For days, you wondered if you made the right decision, taking control of the town with 
+Helsadona. Your moral concernssubsided once you realized the chaos plaguing the area had ceased, as there had 
+not been an incident since your rebellion.The forest, once dark and eerie, was now gorgeous and brimming with 
+fresh life. Creatures thought to have gone extinctin the area returned to live beneath the shade of the trees.
+It was Omarious all along, his jealousy of Helsadona rotted the town, but now, thanks to you, peace has finally
+been restored to Angrulia.
+
+       █ ▓▓█ █▓▓▓▓▓▓▓▓                                                  ▓▓▓█▓▓█   ▓             
+        ▓▒▓▓▓▓▒▒▒▒▓▒▒▒▒▒▓                                               ▓▓▒▒▒▓▒▒▒▓▓▓▓▒▓▓▓         
+       ▓▒▒▓▒▒▒▒▒▓▒▒▒▒▓▓▒▒▒▓                                           ▓▓▒▓▓▒▓▒▒▒▒▒▒▒▒▒▓▒▓▓        
+      ▓▓▓▒▒▓▓▓▓▒▓░▒▒▒▒▒▒▒▒▒▓                                          ▒▒▒▒▒▒▒▒▒▒▒▒▒▓▒▓▒▒▓▓▓       
+     ▓▓▒▒░▒▓▒▒▒░░░░▒▒▒▒▒░▒▒▓▓▓▓                                   █▓▓▓▒▒░▒▒▒░▒░▒░░░▒▒▓▒░▒▒▓▓      
+    █▓▓▒▒▓▓▒░▒░░▒▒░▒▒▒░▒▒░▒▒▒▒▓                                  █▓▒▒░▒░░░░▒▒░░▓▓▒▒▒▒▒▒▓▓▒▓▓      
+    █▓▓▒░░░▒░▒▒▒▒▒▒▒▒░▒▒▓▓▒▒░▒▒▓                                 ▓▒▒▒▒▒▒▓▒▒▒▒▓▒▒▒▓▒░▒▒░░░░▓▓      
+   ▓▒▒░▒▒░░░▒░▒▒▒░▒▒░▒░░░░▒▒▒▒░▒                   ▒▒            ▓▒▒▒░▒▒░░░▒▒▒▒░░▒▒▒▓▒░░▒▒░▒▒▓    
+▓▓▒▒▒▒▒▓▓▓▒▒░▒░░░░░░▒░░░░░░▒░░▒▒                   ░░░           ▒▒░▒▒▒░░░░░░░░▒▒▒░░░░▒▒▒▓▓▒▒▒▓██ 
+█▓▒▒▒▒▒▒▓▓▓▒▒▒▒▓▓▒▓▒░░░▒▒░░░░▒▒▓█      ▓▒▓█▓       ▓▓▓   ▒       ▓▓▓▒░▒░▒▒░░░░▓▓▓▓▓▓▓░▓▒▓▒▓░▓▓▓▒▓ 
+▓▓▒▓▒▓▒▒▒▒▒░▒▒░░▒░▒▒▒▒▒▒░░▒▒▓▓▓▒▓▓▓▒   ▒▓▓▒      ▓▒░░░▒▓ ▓   ▒▒▒▒▓▒▓▒▒▒░░▒▓▓▒▒▒░▒▒▒▒▒░▒▒▒▒▓▓▓▒▓▓▓▓
+▓▒▒░░░░░░░░░░░░░░░░░░░░░▒▓▒▒▒▒▒▒░░▒▓   ▒▓█▓      ▒░░░░░░ ▓   ▓░▒▒▒▓▒▒▒▓▒░░░░░░░░░▒░░░░▒░░░░▒▒▒▒▓▓ 
+    █▒░░░░░░░░░░░░░░░░░░░▒▒░▒▒▒▒░▒   ▓▓▓▓█▓▓     ░▒░░░░▒░▒    ▓▒▒▒▒▒░▒▒▒░░░░░░░░░░░░░░░░░░░░▓▓█▓  
+       ▒░░░▒░░░░░░░░░░░░░▒▒▒░░▒░▒     ▒████▓▓  ▒▒▒░░░░░ ▒▓      ▓▒▒▒▒░▓▒▒▒░░░░░░░░░░░▒░░▒▒░       
+        ▓▒▒▓▓░░▓░░░░▓▒▒▒▒░▒▒▓▓       ▒██▓▒▓█▓  ▓▓ ░░░░░ ▒         ▓▒▒▒▒▒▒▒▒▒▒░░░░▓░░░▓▒░▒▒        
+             ▓░░░░░░                ░▓█▓█▓▓▓█    ▒░░░░░▓▓                   ▒░░░░▓▒░▓             
+               ▒▒░░▒                ▒▓▓▓▓▓▓▓▓▓   ░░░░░░▒▓                    ▒░░▒░                
+               ▒▒▒░░               ▒▓▓▓▓▓▓▒▓▓▓▓  ░░░░░░░▓                    ▒░▒▒▒                
+               ▓▒▒▒▒▒            ▒▓▓▓▓▓▓▒▓▒▓▓▓▓▒▒░░░░░░░                     ▒▒▒▒▓                
+              ▓▒▒▒▒▒▓             ▓▓▓▓▒ ▒▒ ▒▓▓▓  ░░▒░░░▒                    █▒▒▒▒▒▓               
+             ░░▒▒▒▒░▒▓     ░░░      ▒              ░░░▒       ░▒         ░░░░▒░▒▒▒▓▓  ░░      ▒   
+             ░░░           ▒░░░                   ░░░░ ░     ░░░▒         ░░░        ░░░░   ░░░░  
+             ░░░             ░░▒    ░░░      ░░░  ░░░▓░░░░░░  ░░░  ░       ░░░ ░░    ░░░░  ░░░    
+       ░░░   ░░░             ░░░░  ░░░░      ▒░░░░░░  ░░  ░░░░░░░░░░░░      ░░░░░░▒ ░░░░░ ░░░     
+       ░░░░▒ ░░░              ░░░░░░░░░░░░▒   ░░░░░  ░░    ░░░  ░░░░░░       ░░░░░░░░░░░░░░░      
+        ░░   ░░░  ░░░ ░░░░      ░░░░ ░░░░░░▓  ░░░░  ░░░     ░░░  ░░░░   ▒░░░░ ░░░░░░░░░░░░░       
+        ░░   ░░░░░░░░░░░░░     ░░░░░░░░░░░░ ░░░░░░░░░░     ▓ ░░░  ░░░░  ░░░░░ ░░░░░░░░░░░▒        
+        ░░    ░░░░░ ░░░░░░ ░░░░░░░░░░░░░░░░░░░░░░░░░░    ░░░░░░░░ ░░░░░░░░░░░░░░░░░░░░░░░░   ░░░░ 
+        ░░░░░░░░░░░░░░░░░░░░░░░░  ░░░░░░░░░░░░░░░░░░░   ░░░░░░▒░░▒░░░░░░░░░░░░░░░░░░░░░░░░░  ░░░░ 
+
+
+Congratulations, you have won.
+
+");
+
+                                    // clear any leftover keypress before the pause
+                                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                                   // Console.WriteLine("\nType [Y] for Yes or [N] for No:"); 
+                                      Console.ReadKey(true);
+                                    if (Input.IsKeyPressed(ConsoleKey.Y))
+                                        currentMapIndex = 0;
+                                    SwitchToAdventureMode();
+                                    return;
+                                }
+                                else if (Input.IsKeyPressed(ConsoleKey.N))
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine($@"Helsadona’s voice trembles as she steps toward you, her palms raised in 
+surrender. “Please, listen to me,” she pleads, eyes watery. “Omarious deceived you, deceived them all. 
+I never sought destruction, only to protect what remains of the old magic. The forest, the creatures…”
+“Enough,” you interrupt, your grip tightening around the {chosenWeapon}. It hums with the combined 
+power of slime, spider, and scorpion, a culmination of everything you have fought to get here. “You think
+I haven’t heard the stories?” you say. “The carvings. The plaques. The dead.” Her expression breaks, tears 
+stain her cheeks. “Lies! Lies carved by fearful hands! He feared me, feared what he couldn’t control. I 
+can prove—” You lunge before she can finish, driving your blade deep into her chest. Her body falls to the
+cold damp ground. Helsadona is finally dead. You kneel to her level, cutting through her ribcage to retrieve 
+her heart, still faintly glowing with magic. Your task is complete. Without looking back, you follow the 
+tunnels out, emerging into the forest’s early morning light. When you reach the outskirts of Angrulia,
+the town is already gathered. Murmurs ripple through the crowd as they see what you carry. Omarious
+steps forward, his eyes widening at the sight of Helsadona’s heart.“You’ve done it,” he whispers,
+awe-struck. “After all these years... I am— ahem —Angrulia is free.” He grabs your hand and raises 
+your arm high, and the crowd erupts in cheers. “The Hero of Angrulia!” they chant. “The slayer of 
+the Helsadona!”
+
+                                                                                                  
+               ▒                                                                ▒▓▒               
+          ▒    ▒▒                                                                ▒▒   ▒▒          
+            ▒▒▒▒                                                                  ▒▒▒▒            
+          ▒▒▓ ▒▒▒▒▒                                                            ▓▒▒▒▒▓▓▒▒          
+           ▓▒▒▒▒         ▓▓ ▒                                        ▒ ▓▓         ▒▒▒▒▓           
+          ▒▒▒▓ ▓▒        ▒▒▒▒          ▓                             ▒▒▒▒        ▒▓▒▓▓▒▓          
+        ▒▓▓   ▒▓▒▓        ▒▒▒▒▒▓      ▒░▓          ▒▒              ▒▒▒▒▒        ▒▒█▒    ▒▒        
+         ▒     ▒ ▒▒▒     ▒▒▒  ▓  ░▒▒ ▒▒▒▓▓▓        ░░░                ▒▒▒     ▒▒▒ ▒     ▒         
+      ▒▒  ▒▒▒ ▒▓▒ ▒▒ ▓▓▒▒▒▒▒▒▒▒ ▒▒▒▓ ▓█▓█▓▓        ▓▓▓   ▒         ▒▓▒▒▒▒▒▒▒▓ ▒▒ ▒▓▒▒▒▒   ▒▒      
+        ▓   ▒▒▒▒▒▒▒░▒    ▒    ▒   ▒ ▒▒▓▓▓▓▒▓     ▓▒░░░▒▓ ▓             ▓▒    ▒▒▒▒▒▒  ▒  ▓▒        
+          ▒▓   ▒▒▒▒▒▒            ▒▓▒▒░▒▒▒▒▒▓     ▒░░░░░░ ▓                   ▒▒▒▒▒▒   ▒▓          
+          ░▒▒▒▒▒▒                ▒▒▒▒░░▒▒░▒▓▓    ░▒░░░░▒░▒                      ▓▒▒▒▒▒▒           
+            ▒▒▒▓▒▒               ▒░░▒░▒▒▒░▓▓▓  ▒▒▒░░░░░ ▒▓                      ▒▒▓▒▒▒            
+            ▒▒▒ ▒▒               ▒░░░░░▒░▒▒▒▓█ ▓▓ ░░░░░ ▒                       ▒▒ ▒▒▒            
+            ▒▒▒▒▒                ▒▒░░░░▒▒░▒▒▓▓   ▒░░░░░▓▓                        ▒▒▒▒▒▒           
+            ▒▒▒░▒                ▒▓▒░░░░▓░▒░▒▓   ░░░░░░▒▓                        ▒░▒▒▒            
+            ▒▒▒▒░                ▒▓▒░░░░▒░▓░▒▒   ░░░░░░░▓                        ▒▒▒▒▒            
+             ▒▒▒▒                ▒▓▒▒░░░▒░░▒▒▒▓ ▒░░░░░░░                         ▒▒▒▒             
+             ▒▒▒▒                ▒▒▒░░░░░░▒░░▒▒  ░░▒░░░▒                         ▒▒▒▒             
+             ▒░▒▒          ░░░                     ░░░▒       ░▒         ░░░░    ▒▒▒▒▒░░      ▒   
+            ▒░░▒▒          ▒░░░                   ░░░░ ░     ░░░▒         ░░░    ▒▒▒▒▒░░░   ░░░░  
+           ▒▒░░░▒            ░░▒    ░░░      ░░░  ░░░▓░░░░░░  ░░░  ░       ░░░ ░░▒▒░▒░░░░  ░░░    
+       ░░░   ░░░             ░░░░  ░░░░      ▒░░░░░░  ░░  ░░░░░░░░░░░░      ░░░░░░▒ ░░░░░ ░░░     
+       ░░░░▒ ░░░              ░░░░░░░░░░░░▒   ░░░░░  ░░    ░░░  ░░░░░░       ░░░░░░░░░░░░░░░      
+        ░░   ░░░  ░░░ ░░░░      ░░░░ ░░░░░░▓  ░░░░  ░░░     ░░░  ░░░░   ▒░░░░ ░░░░░░░░░░░░░       
+        ░░   ░░░░░░░░░░░░░     ░░░░░░░░░░░░ ░░░░░░░░░░     ▓ ░░░  ░░░░  ░░░░░ ░░░░░░░░░░░▒        
+        ░░    ░░░░░ ░░░░░░ ░░░░░░░░░░░░░░░░░░░░░░░░░░    ░░░░░░░░ ░░░░░░░░░░░░░░░░░░░░░░░░   ░░░░ 
+        ░░░░░░░░░░░░░░░░░░░░░░░░  ░░░░░░░░░░░░░░░░░░░   ░░░░░░▒░░▒░░░░░░░░░░░░░░░░░░░░░░░░░  ░░░░ 
+
+
+Congratulations, you have won.
+
+");
+
+                                    // clear any leftover keypress before the pause
+                                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                                   // Console.WriteLine("\nType [Y] for Yes or [N] for No:");
+                                    Console.ReadKey(true);
+                                    if (Input.IsKeyPressed(ConsoleKey.N))
+                                        currentMapIndex = 0;
+                                    SwitchToAdventureMode();
+                                    return;
+                                }
+
+                                return; // wait for L or R
+                            }
+
 
                         default:
                             Console.WriteLine("Victory! Press [Enter] to continue to the next adventure.");
@@ -658,7 +1033,7 @@ Your journey reaches its climax. Press [Enter] to finish.");
             {
                 if (Input.IsKeyPressed(ConsoleKey.S)) chosenWeapon = "Scepter";
                 if (Input.IsKeyPressed(ConsoleKey.W)) chosenWeapon = "Sword";
-                if (Input.IsKeyPressed(ConsoleKey.P)) chosenWeapon = "Spear";
+                
 
                 if (chosenWeapon != "")
                 {
